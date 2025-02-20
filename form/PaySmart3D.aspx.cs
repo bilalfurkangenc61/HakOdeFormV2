@@ -4,15 +4,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
-using form.Generate;
-using System.Security.Policy;
-using System.EnterpriseServices;
 using System.Web;
+using System.Web.UI.WebControls;
+using form.Generate;
 
 namespace form
 {
     public partial class PaySmart3D : System.Web.UI.Page
     {
+        private const string ApiBaseUrl = "https://testapp.halkode.com.tr/ccpayment/api/";
+        private const string MerchantKey = "$2y$10$XUmbnOQ0nmHsZy8WxIno4euYobTVUzxqtU1h..x32zyfG6qw7OYrq";
+        private const string AppId = "f77c7d06a417638ccde51c35fd6f6c17";
+        private const string AppSecret = "30296568e1d7941de4fd684dbc7203e4";
+
         protected async void ProcessPayment_Click(object sender, EventArgs e)
         {
             lblResult.Text = "<b>Ödeme İşleniyor...</b><br/>";
@@ -22,20 +26,20 @@ namespace form
                 string apiResponse = await ProcessPaymentAsync();
                 if (!string.IsNullOrEmpty(apiResponse))
                 {
-                    // API yanıtı HTML form içeriyorsa, yeni bir sayfa olarak kaydet ve yönlendir
                     string filePath = Server.MapPath("~/Redirect.html");
                     File.WriteAllText(filePath, apiResponse);
-
                     Response.Redirect("Redirect.html");
                 }
                 else
                 {
                     lblResult.Text += "<b>Ödeme başarısız!</b><br/>";
+                    RedirectToFailPage("41", "İşlem başarısız");
                 }
             }
             catch (Exception ex)
             {
                 lblResult.Text += $"<b>Hata:</b> {ex.Message}<br/>";
+                RedirectToFailPage("500", ex.Message);
             }
         }
 
@@ -44,18 +48,13 @@ namespace form
             string token = await GetTokenAsync();
             if (string.IsNullOrEmpty(token))
             {
-                lblResult.Text += "<b>Hata:</b> Token alınamadı!<br/>";
+                RedirectToFailPage("401", "Token alınamadı!");
                 return null;
             }
 
-            string baseUrl = "https://testapp.halkode.com.tr/ccpayment/api/paySmart3D";
-            string merchantKey = "$2y$10$XUmbnOQ0nmHsZy8WxIno4euYobTVUzxqtU1h..x32zyfG6qw7OYrq";
-         
-
-            decimal totalValue;
-            if (!decimal.TryParse(totalAmount.Text, out totalValue) || totalValue <= 0)
+            if (!decimal.TryParse(totalAmount.Text, out decimal totalValue) || totalValue <= 0)
             {
-                lblResult.Text = "<b>Hata:</b> Geçersiz toplam tutar!";
+                RedirectToFailPage("41", "Geçersiz toplam tutar!");
                 return null;
             }
 
@@ -63,10 +62,8 @@ namespace form
             string currencyCode = "TRY";
             string installmentsValue = installments.SelectedValue;
 
-
-            // Hash oluştur
             HashGenerator hashGenerator = new HashGenerator();
-            string hashKey = hashGenerator.GenerateHashKey(false, totalValue.ToString().Replace(",", "."), installmentsValue, currencyCode, merchantKey, invoiceNumber);
+            string hashKey = hashGenerator.GenerateHashKey(false, totalValue.ToString().Replace(",", "."), installmentsValue, currencyCode, MerchantKey, invoiceNumber);
 
             var data = new
             {
@@ -84,83 +81,88 @@ namespace form
                     new { name = "Ürün", price = totalValue, quantity = 1, description = "Satın alınan ürün" }
                 },
                 total = totalValue,
-                merchant_key = merchantKey,
-                hash_key = hashKey,         
+                merchant_key = MerchantKey,
+                hash_key = hashKey,
                 return_url = GetAbsoluteUrl("Success.aspx"),
                 cancel_url = GetAbsoluteUrl("Fail.aspx"),
                 payment_completed_by = "app",
             };
 
+            return await SendHttpPostRequest("paySmart3D", token, data);
+        }
+
+        private async Task<string> GetTokenAsync()
+        {
+            var data = new { app_id = AppId, app_secret = AppSecret };
+            return await SendHttpPostRequest("token", null, data);
+        }
+
+        private async Task<string> SendHttpPostRequest(string endpoint, string token, object data)
+        {
             using (HttpClient client = new HttpClient())
             {
-                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-                string json = JsonConvert.SerializeObject(data, Formatting.Indented);
-                HttpContent content = new StringContent(json, Encoding.UTF8, "application/json");
+                if (!string.IsNullOrEmpty(token))
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+
+                string jsonData = JsonConvert.SerializeObject(data, Formatting.Indented);
+                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
                 try
                 {
-                    lblResult.Text += "<b>API'ye istek gönderiliyor...</b><br/>";
-                    HttpResponseMessage response = await client.PostAsync(baseUrl, content);
-                    string paymentResult = await response.Content.ReadAsStringAsync();
+                    HttpResponseMessage response = await client.PostAsync(ApiBaseUrl + endpoint, content);
+                    string result = await response.Content.ReadAsStringAsync();
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        lblResult.Text += $"<b>Hata Kodu:</b> {response.StatusCode}<br/>";
+                        RedirectToFailPage(response.StatusCode.ToString(), result);
                         return null;
                     }
 
-                    return paymentResult;
+                    return result;
                 }
                 catch (Exception ex)
                 {
-                    lblResult.Text += $"<b>İstek Hatası:</b> {ex.Message}<br/>";
+                    RedirectToFailPage("500", ex.Message);
                     return null;
                 }
             }
         }
 
+        private void RedirectToFailPage(string errorCode, string errorMessage)
+        {
+            string url = $"Fail.aspx?error_code={errorCode}&error_message={HttpUtility.UrlEncode(errorMessage)}";
+            Response.Redirect(url);
+        }
+
         private string GetAbsoluteUrl(string relativePath)
         {
             var request = HttpContext.Current.Request;
-            var appUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, request.ApplicationPath.TrimEnd('/'));
-            return $"{appUrl}/{relativePath}";
+            return $"{request.Url.Scheme}://{request.Url.Authority}{request.ApplicationPath.TrimEnd('/')}/{relativePath}";
         }
 
-        private async Task<string> GetTokenAsync()
+        protected void cardNumber_TextChanged(object sender, EventArgs e)
         {
-            string baseUrl = "https://testapp.halkode.com.tr/ccpayment/api/token";
-            var data = new
+            string cardNo = cardNumber.Text.Trim();
+            if (cardNo.StartsWith("4"))
             {
-                app_id = "f77c7d06a417638ccde51c35fd6f6c17",
-                app_secret = "30296568e1d7941de4fd684dbc7203e4"
-            };
-
-            using (HttpClient client = new HttpClient())
+                SetInstallments(1, 2, 3);
+            }
+            else if (cardNo.StartsWith("5"))
             {
-                string jsonData = JsonConvert.SerializeObject(data);
-                HttpContent content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+                SetInstallments(1, 2);
+            }
+            else
+            {
+                SetInstallments(1);
+            }
+        }
 
-                try
-                {
-                    HttpResponseMessage response = await client.PostAsync(baseUrl, content);
-                    string result = await response.Content.ReadAsStringAsync();
-                    var decodedResponse = JsonConvert.DeserializeObject<dynamic>(result);
-
-                    if (decodedResponse?.status_code == 100)
-                    {
-                        return decodedResponse.data.token.ToString();
-                    }
-                    else
-                    {
-                        lblResult.Text += "<b>Token Alma Hatası:</b> Yanıt geçersiz!<br/>";
-                        return null;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    lblResult.Text += $"<b>Token Hatası:</b> {ex.Message}<br/>";
-                    return null;
-                }
+        private void SetInstallments(params int[] availableInstallments)
+        {
+            installments.Items.Clear();
+            foreach (int installment in availableInstallments)
+            {
+                installments.Items.Add(new ListItem($"{installment} Taksit", installment.ToString()));
             }
         }
     }

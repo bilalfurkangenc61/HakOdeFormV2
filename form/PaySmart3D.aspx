@@ -9,7 +9,7 @@
             <asp:TextBox ID="cardHolderName" CssClass="form-control" runat="server"></asp:TextBox>
 
             <label>Kart Numarası:</label>
-            <asp:TextBox ID="cardNumber" CssClass="form-control" runat="server"></asp:TextBox>
+            <asp:TextBox ID="cardNumber" CssClass="form-control" runat="server" AutoPostBack="true" OnTextChanged="cardNumber_TextChanged"></asp:TextBox>
 
             <label>Son Kullanma Ayı:</label>
             <asp:TextBox ID="expiryMonth" CssClass="form-control" runat="server"></asp:TextBox>
@@ -29,8 +29,6 @@
             <label>Taksit Sayısı:</label>
             <asp:DropDownList ID="installments" CssClass="form-control" runat="server">
                 <asp:ListItem Value="1" Selected="True">Tek Çekim</asp:ListItem>
-                <asp:ListItem Value="2">2 Taksit</asp:ListItem>
-                <asp:ListItem Value="3">3 Taksit</asp:ListItem>
             </asp:DropDownList>
 
             <asp:Button ID="btnPay" CssClass="btn btn-primary mt-3 w-100" runat="server" Text="Ödeme Yap" OnClick="ProcessPayment_Click" />
@@ -40,8 +38,6 @@
             </div>
         </div>
 
-    
         <div id="apiResponseContainer" runat="server"></div>
-
     </div>
 </asp:Content>

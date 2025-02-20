@@ -15,15 +15,6 @@ namespace form
     {
 
         /// <summary>
-        /// lblcardHolderName denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik olarak oluşturulan alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblcardHolderName;
-
-        /// <summary>
         /// lblcardNumber denetimi.
         /// </summary>
         /// <remarks>
@@ -33,33 +24,6 @@ namespace form
         protected global::System.Web.UI.WebControls.Label lblcardNumber;
 
         /// <summary>
-        /// lblexpiryMonth denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik olarak oluşturulan alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblexpiryMonth;
-
-        /// <summary>
-        /// lblexpiryYear denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik olarak oluşturulan alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblexpiryYear;
-
-        /// <summary>
-        /// lblcvv denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik olarak oluşturulan alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblcvv;
-
-        /// <summary>
         /// lblinvoiceId denetimi.
         /// </summary>
         /// <remarks>
@@ -67,15 +31,6 @@ namespace form
         /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblinvoiceId;
-
-        /// <summary>
-        /// lbltotalAmount denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik olarak oluşturulan alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbltotalAmount;
 
         /// <summary>
         /// apiResponseContainer denetimi.
