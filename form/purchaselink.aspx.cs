@@ -3,11 +3,10 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using form.Generate;  // HashGenerator sınıfını içeren namespace
 
 namespace form
 {
-    public partial class confirmPayment : System.Web.UI.Page
+    public partial class purchaselink : System.Web.UI.Page
     {
         protected async void ProcessPayment_Click(object sender, EventArgs e)
         {
@@ -32,10 +31,11 @@ namespace form
                 return;
             }
 
-            string baseUrl = "https://testapp.halkode.com.tr/ccpayment/api/confirmPayment";
+            string baseUrl = "https://testapp.halkode.com.tr/ccpayment/purchase/link";
             string merchantKey = "$2y$10$XUmbnOQ0nmHsZy8WxIno4euYobTVUzxqtU1h..x32zyfG6qw7OYrq";
 
             // Kullanıcıdan gelen verileri al
+            string cardHolder = cardHolderName.Text.Trim();
             string invoiceNumber = invoiceId.Text.Trim();
             decimal totalValue;
 
@@ -45,24 +45,26 @@ namespace form
                 return;
             }
 
-            string status = "1"; // API'ye gönderilecek durum bilgisi
-
-            // Hash oluştur
-            HashGenerator hashGenerator = new HashGenerator();
-            string hashKey = hashGenerator.GenerateHashKey(
-                false,
-                merchantKey,
-                invoiceNumber,
-                status
-            );
-
             var data = new
             {
-                total = totalValue.ToString("F2").Replace(",", "."),
+                cc_holder_name = cardHolder,
                 invoice_id = invoiceNumber,
-                status = status,
+                invoice_description = "Ödeme Test",
+                total = totalValue,
                 merchant_key = merchantKey,
-                hash_key = hashKey
+                currency_code = "TRY",
+                invoice = new[]
+                {
+                 new { invoice_id = invoiceNumber, invoice_description = "invoice_description", total = totalValue, return_url = "https://google.com.tr", cancel_url="https://github.com.tr",
+                 items = new[]
+                {
+                    new { name = "Ürün", price = totalValue, quantity = 1, description = "Satın alınan ürün" }
+                },
+
+                 }
+                }
+
+
             };
 
             using (HttpClient client = new HttpClient())
@@ -78,11 +80,11 @@ namespace form
                     HttpResponseMessage response = await client.PostAsync(baseUrl, content);
                     string paymentResult = await response.Content.ReadAsStringAsync();
 
-                    lblResult.Text += "<b>API Yanıtı:</b> <pre>" + System.Web.HttpUtility.HtmlEncode(paymentResult) + "</pre><br/>";
-                    lblResult.Text += "<b>HTTP Durum Kodu:</b> " + response.StatusCode + "<br/>";
+                    lblResult.Text += "<b>API Yanıtı:</b> " + paymentResult + "<br/><br/>";
 
                     if (!response.IsSuccessStatusCode)
                     {
+                        lblResult.Text += "<b>Hata Kodu:</b> " + response.StatusCode + "<br/>";
                         lblResult.Text += "<b>Hata Mesajı:</b> " + paymentResult + "<br/>";
                     }
                 }
@@ -96,11 +98,7 @@ namespace form
         private async Task<string> GetToken()
         {
             string baseUrl = "https://testapp.halkode.com.tr/ccpayment/api/token";
-            var data = new
-            {
-                app_id = "f77c7d06a417638ccde51c35fd6f6c17",
-                app_secret = "30296568e1d7941de4fd684dbc7203e4"
-            };
+            var data = new { app_id = "f77c7d06a417638ccde51c35fd6f6c17", app_secret = "30296568e1d7941de4fd684dbc7203e4" };
             string jsonData = JsonConvert.SerializeObject(data);
 
             using (HttpClient client = new HttpClient())
@@ -115,15 +113,7 @@ namespace form
                     lblResult.Text += "<b>Token Yanıtı:</b> " + result + "<br/><br/>";
 
                     var decodedResponse = JsonConvert.DeserializeObject<dynamic>(result);
-                    if (decodedResponse?.status_code == 100)
-                    {
-                        return decodedResponse.data.token.ToString();
-                    }
-                    else
-                    {
-                        lblResult.Text += "<b>Token Alma Hatası:</b> " + result + "<br/>";
-                        return null;
-                    }
+                    return decodedResponse?.status_code == 100 ? decodedResponse.data.token.ToString() : null;
                 }
                 catch (Exception ex)
                 {

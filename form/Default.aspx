@@ -20,11 +20,12 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+           
+            
             background: url('mainslider.jpg') no-repeat center center;
-            background-size: cover;
-            filter: brightness(0.6); /* Hafif karartılmış arka plan */
+            background-size: contain;
+            background-repeat: no-repeat;
+             /* Hafif karartılmış arka plan */
         }
 
         /* Hoşgeldiniz Yazısı */
@@ -33,12 +34,12 @@
             z-index: 1;
             font-size: 3rem;
             font-weight: bold;
-            color: black; /* Siyah renk */
+            color: white;
         }
 
         /* Footer Mavi Renk */
         footer {
-            background-color: #007bff; /* Mavi */
+            background-color: #180554; /* Mavi */
             color: white;
             text-align: center;
             padding: 10px 0;

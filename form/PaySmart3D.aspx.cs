@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using System.IO;
 using Newtonsoft.Json;
 using form.Generate;
+using System.Security.Policy;
+using System.EnterpriseServices;
+using System.Web;
 
 namespace form
 {
@@ -47,6 +50,7 @@ namespace form
 
             string baseUrl = "https://testapp.halkode.com.tr/ccpayment/api/paySmart3D";
             string merchantKey = "$2y$10$XUmbnOQ0nmHsZy8WxIno4euYobTVUzxqtU1h..x32zyfG6qw7OYrq";
+         
 
             decimal totalValue;
             if (!decimal.TryParse(totalAmount.Text, out totalValue) || totalValue <= 0)
@@ -58,6 +62,7 @@ namespace form
             string invoiceNumber = invoiceId.Text.Trim();
             string currencyCode = "TRY";
             string installmentsValue = installments.SelectedValue;
+
 
             // Hash oluştur
             HashGenerator hashGenerator = new HashGenerator();
@@ -80,9 +85,9 @@ namespace form
                 },
                 total = totalValue,
                 merchant_key = merchantKey,
-                hash_key = hashKey,
-                return_url = "https://www.google.com/",
-                cancel_url = "https://www.github.com/",
+                hash_key = hashKey,         
+                return_url = GetAbsoluteUrl("Success.aspx"),
+                cancel_url = GetAbsoluteUrl("Fail.aspx"),
                 payment_completed_by = "app",
             };
 
@@ -112,6 +117,13 @@ namespace form
                     return null;
                 }
             }
+        }
+
+        private string GetAbsoluteUrl(string relativePath)
+        {
+            var request = HttpContext.Current.Request;
+            var appUrl = string.Format("{0}://{1}{2}", request.Url.Scheme, request.Url.Authority, request.ApplicationPath.TrimEnd('/'));
+            return $"{appUrl}/{relativePath}";
         }
 
         private async Task<string> GetTokenAsync()
