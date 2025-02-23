@@ -24,6 +24,15 @@ namespace form
         protected global::System.Web.UI.WebControls.TextBox cardHolderName;
 
         /// <summary>
+        /// totalAmount denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik olarak oluşturulan alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox totalAmount;
+
+        /// <summary>
         /// cardNumber denetimi.
         /// </summary>
         /// <remarks>
@@ -67,15 +76,6 @@ namespace form
         /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox invoiceId;
-
-        /// <summary>
-        /// totalAmount denetimi.
-        /// </summary>
-        /// <remarks>
-        /// Otomatik olarak oluşturulan alan.
-        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox totalAmount;
 
         /// <summary>
         /// installments denetimi.

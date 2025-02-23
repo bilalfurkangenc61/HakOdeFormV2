@@ -8,6 +8,9 @@
             <label>Kart Sahibi Adı:</label>
             <asp:TextBox ID="cardHolderName" CssClass="form-control" runat="server"></asp:TextBox>
 
+               <label>Toplam Tutar (TRY):</label>
+   <asp:TextBox ID="totalAmount" CssClass="form-control" runat="server"></asp:TextBox>
+
             <label>Kart Numarası:</label>
             <asp:TextBox ID="cardNumber" CssClass="form-control" runat="server" AutoPostBack="true" OnTextChanged="cardNumber_TextChanged"></asp:TextBox>
 
@@ -23,8 +26,7 @@
             <label>Fatura No:</label>
             <asp:TextBox ID="invoiceId" CssClass="form-control" runat="server"></asp:TextBox>
 
-            <label>Toplam Tutar (TRY):</label>
-            <asp:TextBox ID="totalAmount" CssClass="form-control" runat="server"></asp:TextBox>
+         
 
             <label>Taksit Sayısı:</label>
             <asp:DropDownList ID="installments" CssClass="form-control" runat="server">

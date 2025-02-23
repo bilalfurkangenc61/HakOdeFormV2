@@ -15,22 +15,40 @@ namespace form
     {
 
         /// <summary>
-        /// lblcardNumber denetimi.
+        /// lblCardNumber denetimi.
         /// </summary>
         /// <remarks>
         /// Otomatik olarak oluşturulan alan.
         /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblcardNumber;
+        protected global::System.Web.UI.WebControls.Label lblCardNumber;
 
         /// <summary>
-        /// lblinvoiceId denetimi.
+        /// lblInvoiceId denetimi.
         /// </summary>
         /// <remarks>
         /// Otomatik olarak oluşturulan alan.
         /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblinvoiceId;
+        protected global::System.Web.UI.WebControls.Label lblInvoiceId;
+
+        /// <summary>
+        /// lblStatusCode denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik olarak oluşturulan alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusCode;
+
+        /// <summary>
+        /// lblStatusDescription denetimi.
+        /// </summary>
+        /// <remarks>
+        /// Otomatik olarak oluşturulan alan.
+        /// Değiştirmek için, alan bildirimini tasarımcı dosyasından arka plan kod dosyasına taşıyın.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStatusDescription;
 
         /// <summary>
         /// apiResponseContainer denetimi.

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Web;
-using System.Web.UI.WebControls;
 
 namespace form
 {
@@ -10,26 +9,19 @@ namespace form
         {
             if (!IsPostBack)
             {
-                SetLabelValue(lblcardNumber, "credit_card_no");
-                SetLabelValue(lblinvoiceId, "invoice_id");
+                // Query string'den değerleri al
+                string cardNumber = Request.QueryString["credit_card_no"];
+                string invoiceId = Request.QueryString["invoice_id"];
+                string statusCode = Request.QueryString["status_code"];
+                string statusDescription = Request.QueryString["status_description"];
 
-                // API yanıtını ekrana JSON formatında bastık
-                string apiResponse = Request.QueryString.ToString();
-                apiResponseContainer.InnerHtml = $"<pre>{HttpUtility.HtmlEncode(apiResponse)}</pre>";
-            }
-        }
-
-        private void SetLabelValue(Label label, string key)
-        {
-            string value = Request.QueryString[key];
-            if (!string.IsNullOrEmpty(value))
-            {
-                label.Text = value;
-            }
-            else
-            {
-                label.Visible = false; // Eğer veri yoksa label tamamen gizlenecek
+                // Değerleri ilgili alanlara ata
+                lblCardNumber.Text = cardNumber;
+                lblInvoiceId.Text = invoiceId;
+                lblStatusCode.Text = statusCode;
+                lblStatusDescription.Text = statusDescription;
             }
         }
     }
 }
+
