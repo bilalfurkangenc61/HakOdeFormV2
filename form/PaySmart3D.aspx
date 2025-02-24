@@ -112,7 +112,7 @@
 
     <div class="container">
         <h2 class="text-center mt-4">3D Ödeme Formu</h2>
-
+         
         <div class="row">
             <!-- Sol Taraf: Ödeme Formu -->
             <div class="col-md-6">
