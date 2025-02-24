@@ -1,6 +1,6 @@
 ﻿
 
-<%@ Page Title="Taksit Gösterme" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="GetPos.aspx.cs" Inherits="form.GetPos" %>
+<%@ Page Title="HalkOde" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="GetPos.aspx.cs" Inherits="form.GetPos" %>
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">

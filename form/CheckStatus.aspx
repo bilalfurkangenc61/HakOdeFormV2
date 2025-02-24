@@ -1,6 +1,6 @@
 ﻿
 
-<%@ Page Title="Ödeme Sorgulama" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="CheckStatus.aspx.cs" Inherits="form.CheckStatus" %>
+<%@ Page Title="HalkOde" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="CheckStatus.aspx.cs" Inherits="form.CheckStatus" %>
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">

@@ -38,7 +38,7 @@ namespace form
 
             // Kullanıcıdan gelen verileri al
             string cardHolder = cardHolderName.Text?.Trim();
-            string invoiceNumber = invoiceId.Text?.Trim();
+            string invoiceNumber = GenerateRandomInvoiceNumber();
             if (!decimal.TryParse(totalAmount.Text, out decimal totalValue) || totalValue <= 0)
             {
                 lblResult.Text = "<b>Hata:</b> Geçersiz toplam tutar!";
@@ -55,8 +55,8 @@ namespace form
                 cancel_url = "https://github.com.tr",
                 items = new[]
                 {
-                    new { name = "Item1", price = totalValue, quantity = 1, description = "Test" }
-                }
+                        new { name = "Item1", price = totalValue, quantity = 1, description = "Test" }
+                    }
             };
 
             string invoiceJson = JsonConvert.SerializeObject(invoiceData); // ✅ DÜZ STRING FORMATINDA JSON OLUŞTURMA
@@ -137,6 +137,13 @@ namespace form
                     return null;
                 }
             }
+        }
+
+        // Rastgele Fatura Numarası Üreten Metod
+        private string GenerateRandomInvoiceNumber()
+        {
+            Random random = new Random();
+            return $"INV-{DateTime.Now:yyyyMMdd}-{random.Next(100000, 999999)}";
         }
     }
 }

@@ -157,7 +157,9 @@ namespace form
                 return null;
             }
 
-            string invoiceNumber = invoiceId.Text.Trim();
+            // Rastgele fatura numarası üretme
+            string invoiceNumber = GenerateRandomInvoiceNumber();
+
             string currencyCode = "TRY";
             string installmentsValue = installments.SelectedValue;
 
@@ -173,12 +175,12 @@ namespace form
                 cvv = cvv.Text.Trim(),
                 currency_code = currencyCode,
                 installments_number = installmentsValue,
-                invoice_id = invoiceNumber,
+                invoice_id = invoiceNumber,  // Rastgele oluşturulan fatura numarası burada kullanılıyor
                 invoice_description = "Ödeme Test",
                 items = new[]
                 {
-                    new { name = "Ürün", price = totalValue, quantity = 1, description = "Satın alınan ürün" }
-                },
+            new { name = "Ürün", price = totalValue, quantity = 1, description = "Satın alınan ürün" }
+        },
                 total = totalValue,
                 merchant_key = MerchantKey,
                 hash_key = hashKey,
@@ -189,6 +191,14 @@ namespace form
 
             return await SendHttpPostRequest("paySmart3D", token, data);
         }
+
+        // Rastgele Fatura Numarası Üreten Metod
+        private string GenerateRandomInvoiceNumber()
+        {
+            Random random = new Random();
+            return $"INV-{DateTime.Now:yyyyMMdd}-{random.Next(100000, 999999)}";
+        }
+
 
         private static async Task<string> GetTokenAsync()
         {

@@ -1,5 +1,5 @@
 ﻿
-<%@ Page Title="3D Ödeme" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="purchaselink.aspx.cs" Inherits="form.purchaselink" EnableEventValidation="false" %>
+<%@ Page Title="HalkOde" Language="C#" MasterPageFile="~/Site.Master" Async="true" AutoEventWireup="true" CodeBehind="purchaselink.aspx.cs" Inherits="form.purchaselink" EnableEventValidation="false" %>
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
@@ -10,8 +10,8 @@
             <label>Kart Sahibi Adı:</label>
             <asp:TextBox ID="cardHolderName" CssClass="form-control" runat="server"></asp:TextBox>
 
-            <label>Fatura No:</label>
-            <asp:TextBox ID="invoiceId" CssClass="form-control" runat="server"></asp:TextBox>
+<%--            <label>Fatura No:</label>
+            <asp:TextBox ID="invoiceId" CssClass="form-control" runat="server"></asp:TextBox>--%>
 
             <label>Toplam Tutar (TRY):</label>
             <asp:TextBox ID="totalAmount" CssClass="form-control" runat="server"></asp:TextBox>
