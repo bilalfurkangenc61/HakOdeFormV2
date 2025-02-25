@@ -284,6 +284,7 @@ namespace form
             }
         }
 
+
         // Rastgele Fatura Numarası Üreten Metod
         private string GenerateRandomInvoiceNumber()
         {
